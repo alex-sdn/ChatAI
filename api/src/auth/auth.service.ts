@@ -1,10 +1,16 @@
 import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-    constructor(private prisma: PrismaService) { }
+    constructor(
+        private prisma: PrismaService,
+        private config: ConfigService,
+        private jwt: JwtService,
+    ) { }
 
     async signup(username: string, password: string, confirmPassword: string) {
         if (password !== confirmPassword) {
@@ -26,7 +32,8 @@ export class AuthService {
             }
         })
 
-        return user;
+        const token = await this.signToken(username, user.id);
+        return { access_token: token }
     }
 
     async signin(username: string, password: string) {
@@ -42,6 +49,23 @@ export class AuthService {
             throw new UnauthorizedException('Invalid username or password');
         }
 
-        return 'success'  //return token
+        const token = await this.signToken(username, user.id);
+        return { access_token: token }
+    }
+
+    async signToken(username: string, userId: number) {
+        const secret = await this.config.get('JWT_SECRET');
+        const payload = {
+            username,
+            userId
+        }
+
+        const token = await this.jwt.signAsync(
+            payload, {
+                expiresIn: '1d',
+                secret: secret
+            }
+        )
+        return token
     }
 }
