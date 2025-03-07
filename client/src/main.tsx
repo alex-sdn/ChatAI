@@ -2,12 +2,12 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import RootLayout from './layouts/rootLayout/RootLayout.tsx'
-import DashboardPage from './pages/dashboardPage/DashboardPage.tsx'
-import ChatPage from './pages/chatPage/ChatPage.tsx'
-import AuthLayout from './layouts/authLayout/AuthLayout.tsx'
-import SignInPage from './pages/signInPage/SignInPage.tsx'
-import SignUpPage from './pages/signUpPage/SignUpPage.tsx'
+import RootLayout from './layouts/RootLayout.tsx'
+import DashboardPage from './pages/DashboardPage.tsx'
+import ChatPage from './pages/ChatPage.tsx'
+import AuthLayout from './layouts/AuthLayout.tsx'
+import SignInPage from './pages/SignInPage.tsx'
+import SignUpPage from './pages/SignUpPage.tsx'
 
 const router = createBrowserRouter([
   {
