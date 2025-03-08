@@ -95,8 +95,23 @@ const RootLayout = () => {
         </footer>
       </aside>
 
-      <div className="flex w-full items-center justify-center">
-        <Outlet />
+      <div className="flex flex-col w-full">
+        <header className="flex justify-between my-[12px] mx-[22px]">
+          <p className="font-semibold text-[19px] opacity-60">
+            ChatAI
+          </p>
+          <button className="w-9 h-9 flex items-center justify-center rounded-[20px] mx-[5px] hover:cursor-pointer hover:bg-[#3a3a3a] border-gray-600/[0.6] border-[1px] bg-[#2a2a2a]">
+            <img
+              src={`src/assets/user.svg`}
+              alt="search icon"
+              className="filter invert opacity-50 w-5"
+            />
+          </button>
+        </header>
+
+        <div className="flex items-center justify-center flex-grow">
+          <Outlet />
+        </div>
       </div>
     </div>
   )
