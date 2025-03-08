@@ -56,8 +56,8 @@ const chats = [
 
 const RootLayout = () => {
   return (
-    <div className="flex justify-between">
-      <div className="flex flex-col bg-[#171717] min-h-screen max-h-screen w-3xs text-[15px] px-[15px]">
+    <div className="flex">
+      <aside className="flex flex-col bg-[#171717] min-h-screen max-h-screen w-3xs text-[15px] px-[15px]">
         <header className="my-[10px]">
           <div className="flex justify-between text-2xl">
             <div>
@@ -93,8 +93,9 @@ const RootLayout = () => {
           <p className="text-[14px]">Upgrade plan</p>
           <p className="text-[13px] opacity-60">More access to the best models</p>
         </footer>
-      </div>
-      <div>
+      </aside>
+
+      <div className="flex w-full items-center justify-center">
         <Outlet />
       </div>
     </div>
