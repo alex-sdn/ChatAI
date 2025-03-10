@@ -4,7 +4,8 @@ const AuthLayout = () => {
   return (
     <div>
       <div>
-        <p className="text-[200px] font-bold opacity-40 absolute left-1/2 -translate-x-1/2 mt-[150px] select-none">
+        <p className="text-[120px] lg:text-[200px] font-bold opacity-20 absolute left-1/2 -translate-x-1/2 mt-[100px]
+          select-none whitespace-nowrap overflow-hidden max-w-full">
           ChatAI
         </p>
       </div>

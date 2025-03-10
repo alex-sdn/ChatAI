@@ -54,7 +54,8 @@ const SignUpPage = () => {
           </p>
           <Link
             to={"/sign-in"}
-            className="ml-1 font-medium">
+            className="ml-1 font-medium hover:underline"
+          >
             Sign-in
           </Link>
         </div>
