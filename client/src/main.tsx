@@ -6,8 +6,8 @@ import RootLayout from './layouts/RootLayout.tsx'
 import DashboardPage from './pages/DashboardPage.tsx'
 import ChatPage from './pages/ChatPage.tsx'
 import AuthLayout from './layouts/AuthLayout.tsx'
-import SignInPage from './pages/SignInPage.tsx'
-import SignUpPage from './pages/SignUpPage.tsx'
+// import SignInPage from './pages/SignInPage.tsx'
+import AuthPage from './pages/AuthPage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -28,11 +28,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/sign-in',
-        element: <SignInPage />
+        element: <AuthPage type="sign-in"/>
       },
       {
         path: '/sign-up',
-        element: <SignUpPage />
+        element: <AuthPage type="sign-up"/>
       }
     ]
   }
