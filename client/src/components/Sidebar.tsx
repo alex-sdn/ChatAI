@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import Button from "./Button"
 
 const chats = [
@@ -59,6 +60,8 @@ interface Props {
 }
 
 export default function Sidebar({ isOpen, toggleSidebar }: Props) {
+  const navigate = useNavigate();
+
   return (
     <aside className={`fixed top-0 left-0 bg-[#171717] min-h-screen max-h-screen
       w-3xs text-[15px] px-[15px] transition-transform duration-400 z-50
@@ -72,7 +75,7 @@ export default function Sidebar({ isOpen, toggleSidebar }: Props) {
             </div>
             <div className="flex">
               <Button onClick={() => {}}>search</Button>
-              <Button onClick={() => {}}>newChat</Button>
+              <Button onClick={() => {navigate("/")}}>newChat</Button>
             </div>
           </div>
         </header>
