@@ -71,11 +71,11 @@ export default function Sidebar({ isOpen, toggleSidebar }: Props) {
         <header className="my-[10px]">
           <div className="flex justify-between text-2xl">
             <div>
-              <Button onClick={toggleSidebar}>sidebar</Button>
+              <Button onClick={toggleSidebar} tooltip="Close sidebar">sidebar</Button>
             </div>
             <div className="flex">
-              <Button onClick={() => {}}>search</Button>
-              <Button onClick={() => {navigate("/")}}>newChat</Button>
+              <Button onClick={() => {}} tooltip="Search chats">search</Button>
+              <Button onClick={() => {navigate("/")}} tooltip="New chat">newChat</Button>
             </div>
           </div>
         </header>

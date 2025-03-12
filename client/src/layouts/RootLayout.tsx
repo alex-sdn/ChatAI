@@ -19,18 +19,20 @@ const RootLayout = () => {
   }
 
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar}/>
 
       <div className="flex flex-col w-full">
         <header className="flex justify-between my-[12px] mx-[22px]">
           <div className="flex">
-            {!isOpen && <Button onClick={toggleSidebar}>sidebar</Button>}
+            {!isOpen &&
+              <Button onClick={toggleSidebar} tooltip="Open sidebar">sidebar</Button>
+            }
             <p className="font-semibold text-[19px] opacity-60 mt-[3px] ml-1">
               ChatAI
             </p>
           </div>
-          <Button onClick={handleLogout}>user</Button>
+          <Button onClick={handleLogout} tooltip="Logout">user</Button>
         </header>
 
         <div className="flex items-center justify-center flex-grow">
