@@ -1,4 +1,4 @@
-import Button from './Button'
+import Button from "./Button"
 
 const chats = [
   {
@@ -60,43 +60,47 @@ interface Props {
 
 export default function Sidebar({ isOpen, toggleSidebar }: Props) {
   return (
-    <aside className={`fixed top-0 left-0 bg-[#171717] min-h-screen max-h-screen w-3xs text-[15px] px-[15px] transition-transform
-      duration-400 z-50 ${isOpen ? "translate-x-0 md:relative" : "-translate-x-full"}`}>
-      <header className="my-[10px]">
-        <div className="flex justify-between text-2xl">
-          <div>
-            <Button onClick={toggleSidebar}>sidebar</Button>
+    <aside className={`fixed top-0 left-0 bg-[#171717] min-h-screen max-h-screen
+      w-3xs text-[15px] px-[15px] transition-transform duration-400 z-50
+      ${isOpen ? "translate-x-0 md:relative" : "-translate-x-full"}`}
+    >
+      <div className="flex flex-col h-full">
+        <header className="my-[10px]">
+          <div className="flex justify-between text-2xl">
+            <div>
+              <Button onClick={toggleSidebar}>sidebar</Button>
+            </div>
+            <div className="flex">
+              <Button onClick={() => {}}>search</Button>
+              <Button onClick={() => {}}>newChat</Button>
+            </div>
           </div>
-          <div className="flex">
-            <Button onClick={() => {}}>search</Button>
-            <Button onClick={() => {}}>newChat</Button>
-          </div>
+        </header>
+
+        <h1 className="py-[10px] text-center font-semibold">
+          My Chats
+        </h1>
+        <hr className="border-[#3a3a3a]"/>
+
+        <div className="mt-[14px] flex-grow overflow-y-scroll overflow-x-hidden">
+          <ul>
+            {chats.map(chat => (
+              <li 
+                key={chat.id}
+                className="px-[8px] py-[8px] overflow-hidden whitespace-nowrap text-ellipsis
+                  hover:cursor-pointer hover:bg-[#2f2f2f] rounded-[8px]"
+              >
+                {chat.title}
+              </li>
+            ))}
+          </ul>
         </div>
-      </header>
 
-      <h1 className="py-[10px] text-center font-semibold">
-        My Chats
-      </h1>
-      <hr className="border-[#3a3a3a]"/>
-
-      <div className="mt-[14px] flex-grow overflow-y-scroll overflow-x-hidden">
-        <ul>
-          {chats.map(chat => (
-            <li 
-              key={chat.id}
-              className="px-[8px] py-[8px] overflow-hidden whitespace-nowrap text-ellipsis
-                hover:cursor-pointer hover:bg-[#2f2f2f] rounded-[8px]"
-            >
-              {chat.title}
-            </li>
-          ))}
-        </ul>
+        <footer className="py-[10px]">
+          <p className="text-[14px]">Upgrade plan</p>
+          <p className="text-[13px] opacity-60">More access to the best models</p>
+        </footer>
       </div>
-
-      <footer className="mt-auto py-[10px]">
-        <p className="text-[14px]">Upgrade plan</p>
-        <p className="text-[13px] opacity-60">More access to the best models</p>
-      </footer>
     </aside>
   )
 }
