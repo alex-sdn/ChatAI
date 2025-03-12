@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
 import { z } from "zod"
+import Cookies from "js-cookie";
 import AuthField from "../components/AuthField"
 import { useState } from "react"
 
@@ -16,7 +17,7 @@ const AuthFormSchema = (type: FormType) => {
     password: z.string()
                .min(8, "Must contain at least 8 characters")
                .max(32, "Must contain at most 32 characters")
-               .regex(/^[a-zA-Z0-9_-]*$/, 'Can only contain letters, numbers, hyphens and underscores'),
+               .regex(/^[a-zA-Z0-9_-]*$/, "Can only contain letters, numbers, hyphens and underscores"),
     
     confirmPassword: type === "sign-up"
                       ? z.string().nonempty("Please confirm the password")
@@ -46,7 +47,6 @@ const AuthPage = ({ type }: {type: FormType}) => {
     setErrorMessage("");
 
     try {
-      console.log(`CALLING ${apiUrl}`);
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -57,11 +57,17 @@ const AuthPage = ({ type }: {type: FormType}) => {
         }),
       });
 
-      if (response.status === 201) {
-        // ADD TO COOKIES
+      const data = await response.json();
+
+      if (response.status === 201 && data.access_token) {
+        Cookies.set("access_token", data.access_token, { 
+          expires: 1,
+          // secure: true,  // for prod if https
+          sameSite: "Strict"
+        });
+
         navigate("/")
       } else {
-        const data = await response.json();
         setErrorMessage(`Error: ${data.message || "request failed"}`);
       }
     } catch(error) {
@@ -78,7 +84,10 @@ const AuthPage = ({ type }: {type: FormType}) => {
         className="justify-items-center px-[39px] py-[10px]"
       >
         <h1 className="font-semibold text-[30px] mb-1 text-white">
-          Sign-Up
+          {type === "sign-up"
+            ? "Sign-Up"
+            : "Sign-In"
+          }
         </h1>
 
         <div className="flex flex-col justify-center">
