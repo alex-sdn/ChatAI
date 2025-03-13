@@ -23,7 +23,7 @@ const RootLayout = () => {
       <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar}/>
 
       <div className="flex flex-col w-full">
-        <header className="flex justify-between my-[12px] mx-[22px]">
+        <header className="flex justify-between py-[12px] px-[22px] border-b-1 border-[#323232]">
           <div className="flex">
             {!isOpen &&
               <Button onClick={toggleSidebar} tooltip="Open sidebar">sidebar</Button>
