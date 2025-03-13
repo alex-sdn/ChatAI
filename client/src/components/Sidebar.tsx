@@ -1,5 +1,6 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Button from "./Button"
+import { Link } from "react-router-dom";
 
 const chats = [
   {
@@ -61,6 +62,7 @@ interface Props {
 
 export default function Sidebar({ isOpen, toggleSidebar }: Props) {
   const navigate = useNavigate();
+  const { id } = useParams();
 
   return (
     <aside className={`fixed top-0 left-0 bg-[#171717] min-h-screen max-h-screen
@@ -88,13 +90,17 @@ export default function Sidebar({ isOpen, toggleSidebar }: Props) {
         <div className="mt-[14px] flex-grow overflow-y-scroll overflow-x-hidden">
           <ul>
             {chats.map(chat => (
-              <li 
-                key={chat.id}
-                className="px-[8px] py-[8px] overflow-hidden whitespace-nowrap text-ellipsis
-                  hover:cursor-pointer hover:bg-[#2f2f2f] rounded-[8px]"
-              >
-                {chat.title}
-              </li>
+              <Link to={`/chat/${chat.id}`}>
+                <li 
+                  key={chat.id}
+                  className={`px-[8px] py-[8px] overflow-hidden whitespace-nowrap text-ellipsis
+                    hover:cursor-pointer hover:bg-[#202020] rounded-[8px] active:opacity-80
+                    ${Number(id) === chat.id ? "bg-[#2f2f2f]" : ""}  
+                  `}
+                >
+                  {chat.title}
+                </li>
+              </Link>
             ))}
           </ul>
         </div>
