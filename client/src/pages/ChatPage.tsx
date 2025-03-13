@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react"
 import NewPrompt from "../components/NewPrompt"
 
 const messages = [
@@ -19,7 +20,7 @@ const messages = [
     "id": 3,
     "chatId": 101,
     "sender": "USER",
-    "text": "Can you give me a summary of AI history?",
+    "text": "Can you give me a summary of AI history? Second line of text to test padding.",
     "sentAt": "2025-03-12T10:01:15Z"
   },
   {
@@ -60,22 +61,32 @@ const messages = [
 ]
 
 const ChatPage = () => {
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages])
+
   return (
-    <div className="flex flex-col h-full  max-h-[calc(100vh-100px)] max-w-full">
-      <div className="flex flex-col flex-grow max-w-[740px] overflow-y-scroll overflow-x-hidden px-[10px]">
-        {messages.map((message) => (
-          <p key={message.id}
-            className={`py-[12px] rounded-[20px] px-[20px]
-              ${message.sender === "USER" 
-                ? "bg-[#303030] max-w-[80%] self-end inline-block" 
-                : "pr-[60px] my-[18px] max-w-full"}
-            `}
-          >
-            {message.text}
-          </p>
-        ))}
+    <div className="flex flex-col w-full h-[calc(800vh-100px)] overflow-hidden">
+      <div className="flex overflow-y-auto justify-center">
+        <div className="flex flex-col w-full max-w-[740px] px-[10px]">
+          {messages.map((message) => (
+            <p
+              key={message.id}
+              className={`py-[12px] rounded-[20px] px-[20px]
+                ${message.sender === "USER" 
+                  ? "bg-[#303030] max-w-[80%] mr-2.5 self-end inline-block" 
+                  : "pr-[60px] my-[18px] max-w-full"}
+              `}
+            >
+              {message.text}
+            </p>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
       </div>
-      <div className="mt-auto">
+      <div className="flex justify-center mt-auto mb-5">
         <NewPrompt />
       </div>
     </div>

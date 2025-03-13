@@ -35,9 +35,7 @@ const RootLayout = () => {
           <Button onClick={handleLogout} tooltip="Logout">user</Button>
         </header>
 
-        <div className="flex items-center justify-center flex-grow">
-          <Outlet />
-        </div>
+        <Outlet />
       </div>
     </div>
   )

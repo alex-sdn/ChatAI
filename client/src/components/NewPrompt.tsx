@@ -2,7 +2,7 @@
 export default function NewPrompt() {
   return (
     <div className="max-w-full w-[740px]">
-      <form className="mt-[20px] mx-[16px] pb-[30px] pt-[8px] px-[16px] bg-[#333333] rounded-[14px]">
+      <form className="mx-[16px] pb-[30px] pt-[8px] px-[16px] bg-[#333333] rounded-[14px]">
         <textarea
           name="prompt"
           placeholder="Ask anything..."
