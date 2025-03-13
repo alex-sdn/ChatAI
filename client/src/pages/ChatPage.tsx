@@ -70,7 +70,7 @@ const ChatPage = () => {
   return (
     <div className="flex flex-col w-full h-[calc(800vh-100px)] overflow-hidden">
       <div className="flex overflow-y-auto justify-center">
-        <div className="flex flex-col w-full max-w-[740px] px-[10px]">
+        <div className="flex flex-col w-full max-w-[740px] px-[10px] mt-5">
           {messages.map((message) => (
             <p
               key={message.id}
