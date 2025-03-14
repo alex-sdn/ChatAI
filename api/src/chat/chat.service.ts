@@ -26,7 +26,7 @@ export class ChatService {
     return { chats: chats };
   }
 
-  async getChatHistory(user: User, chatId: number) {
+  async getChatHistory(user: User, chatId: number, ignoreFirst: boolean) {
     const history = await this.prisma.chatHistory.findUnique({
       where: {id: chatId},
       include: {messages: true}
@@ -38,6 +38,10 @@ export class ChatService {
 
     if (history.userId !== user.id) {
       throw new ForbiddenException('You do not have permission to access this');
+    }
+
+    if (ignoreFirst) {
+      history.messages.splice(0, 2);
     }
 
     return { history: history };
@@ -70,7 +74,7 @@ export class ChatService {
   }
 
   async sendMessage(user: User, chatId: number, message: string) {
-    const history = await this.getChatHistory(user, chatId);
+    const history = await this.getChatHistory(user, chatId, false);
 
     const formattedHistory = history.history.messages.map((msg) => ({
       role: msg.sender === "USER" ? "user" : "model",

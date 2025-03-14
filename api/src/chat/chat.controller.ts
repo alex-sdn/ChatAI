@@ -29,7 +29,7 @@ export class ChatController {
 
     @Get(':id')
     getChatHistory(@Req() req: AuthRequest, @Param('id', ParseIntPipe) chatId: number) {
-        return this.chatService.getChatHistory(req.user, chatId);
+        return this.chatService.getChatHistory(req.user, chatId, true);
     }
 
     // create chat
