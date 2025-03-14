@@ -32,9 +32,10 @@ model ChatHistory {
   user          User @relation(fields: [userId], references: [id])
   userId        Int
 
+  title         String
   messages      Message[]
 
-  // @@unique?
+  updatedAt     DateTime @updatedAt
 }
 
 model Message {
