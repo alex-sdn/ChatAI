@@ -20,6 +20,7 @@ const ChatPage = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchMessages = async () => {
     try {
@@ -55,7 +56,7 @@ const ChatPage = () => {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages])
+  }, [messages, isLoading]);
 
   const sendMessage = async (prompt: string) => {
     setMessages((prev) => [
@@ -66,6 +67,8 @@ const ChatPage = () => {
         // sentAt: new Date().toISOString()
       }
     ]);
+
+    setIsLoading(true);
     
     try {
       const response = await fetch(`${apiUrl}/chat/${id}`, {
@@ -95,12 +98,14 @@ const ChatPage = () => {
     } catch(error) {
       console.log(error);
       // display error
+    } finally {
+      setIsLoading(false);
     }
   }
 
   return (
     <div className="flex flex-col w-full h-[calc(800vh-100px)] overflow-hidden">
-      <div className="flex overflow-y-auto justify-center">
+      <div className="flex overflow-y-auto justify-center pb-10">
         <div className="flex flex-col w-full max-w-[740px] px-[10px] mt-5">
           {messages.map((message, index) => (
             <div
@@ -139,7 +144,16 @@ const ChatPage = () => {
               }
             </div>
           ))}
-          <div ref={messagesEndRef} />
+          {isLoading && (
+            <div className="flex justify-center my-4">
+              <img
+                src="/loader.svg"
+                alt="loader"
+                className="filter invert opacity-50 w-9 animate-spin"
+              />
+            </div>
+          )}
+          <div ref={messagesEndRef} className="pt-1" />
         </div>
       </div>
       <div className="flex justify-center mt-auto mb-5">
