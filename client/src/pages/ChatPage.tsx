@@ -47,8 +47,11 @@ const ChatPage = () => {
   };
 
   useEffect(() => {
-    if (location.state?.firstPrompt) {
+    const sentFirstPrompt = sessionStorage.getItem(`sentFirstPrompt-${id}`);
+
+    if (location.state?.firstPrompt && !sentFirstPrompt) {
       sendMessage(location.state?.firstPrompt);
+      sessionStorage.setItem(`sentFirstPrompt-${id}`, "true");
     } else {
       fetchMessages();
     }
