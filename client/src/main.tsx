@@ -9,6 +9,7 @@ import AuthLayout from './layouts/AuthLayout.tsx'
 import AuthPage from './pages/AuthPage.tsx'
 import AuthGuard from './guards/AuthGuard.tsx'
 import GuestGuard from './guards/GuestGuard.tsx'
+import NotFoundPage from './pages/NotFoundPage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
             path: '/chat/:id',
             element: <ChatPage />
           },
+          {
+            path: '*',
+            element: <NotFoundPage />
+          }
         ],
       }
     ]
