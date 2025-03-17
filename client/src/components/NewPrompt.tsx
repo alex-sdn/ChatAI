@@ -9,7 +9,16 @@ export default function NewPrompt({ onSubmit }: Props) {
 
   return (
     <div className="max-w-full w-[740px]">
-      <form className="mx-[16px] pb-[30px] pt-[8px] px-[16px] bg-[#333333] rounded-[14px]">
+      <form
+        className="mx-[16px] pb-[16px] pt-[8px] px-[16px] bg-[#333333] rounded-[14px]"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (prompt.trim() !== "") {
+            onSubmit(prompt);
+            setPrompt("");
+          }
+        }}
+      >
         <textarea
           name="prompt"
           value={prompt}
@@ -31,6 +40,24 @@ export default function NewPrompt({ onSubmit }: Props) {
             }
           }}
         />
+        <div className="flex justify-end">
+          <button 
+            className="w-8 h-8 flex items-center justify-center bg-[#e0e0e0] rounded-2xl
+              hover:cursor-pointer hover:bg-[#adadad]"
+            onClick={(e) => {
+              e.preventDefault();
+              if (prompt.trim() !== "") {
+                onSubmit(prompt);
+                setPrompt("");
+              }
+            }}
+          >
+            <img
+              src="/send.svg"
+              className="w-[22px]"
+            />
+          </button>
+        </div>
       </form>
     </div>
   )
