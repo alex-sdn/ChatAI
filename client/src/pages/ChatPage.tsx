@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import NewPrompt from "../components/NewPrompt"
 import Cookies from "js-cookie"
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import Markdown from "react-markdown";
@@ -18,6 +18,7 @@ const ChatPage = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const [messages, setMessages] = useState<Message[]>([]);
@@ -40,6 +41,8 @@ const ChatPage = () => {
           sender: msg.sender,
           text: msg.text
         })));
+      } else {
+        navigate("/", { replace: true });
       }
     } catch(error) {
       console.log(error);
