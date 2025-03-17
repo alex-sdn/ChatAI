@@ -23,6 +23,8 @@ const ChatPage = () => {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showError, setShowError] = useState(false);
 
   const fetchMessages = async () => {
     try {
@@ -41,12 +43,16 @@ const ChatPage = () => {
           sender: msg.sender,
           text: msg.text
         })));
+        setErrorMessage("");
+        setShowError(false);
       } else {
         navigate("/", { replace: true });
       }
     } catch(error) {
       console.log(error);
-      // display error
+      setErrorMessage("Failed to fetch chat history");
+      setShowError(true);
+      setTimeout(() => setShowError(false), 4000);
     }
   };
 
@@ -119,6 +125,13 @@ const ChatPage = () => {
     <div className="flex flex-col w-full h-[calc(800vh-100px)] overflow-hidden">
       <div className="flex overflow-y-auto justify-center pb-10">
         <div className="flex flex-col w-full max-w-[740px] px-[10px] mt-5">
+          {errorMessage && (
+            <div className={`top-5 left-200 right-200 bg-red-500 text-white text-center
+              p-2 z-50 mx-20 rounded-[30px] text-[14px] transition-transform duration-250 transform 
+              ${showError ? 'translate-y-0' : '-translate-y-20'}`}>
+              {errorMessage}
+            </div>
+          )}
           {messages.map((message, index) => (
             <div
               key={index}
