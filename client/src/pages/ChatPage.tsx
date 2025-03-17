@@ -92,10 +92,14 @@ const ChatPage = () => {
             // sentAt: new Date().toISOString()
           }
         ]);
+      } else {
+        throw new Error(`Failed to send message [${response.status}]`);
       }
-    } catch(error) {
+    } catch(error: any) {
       console.log(error);
-      // display error
+      setErrorMessage(error.message || "Failed to send message");
+      setShowError(true);
+      setTimeout(() => setShowError(false), 4000);
     } finally {
       setIsLoading(false);
     }
