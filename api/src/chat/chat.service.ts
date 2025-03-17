@@ -20,7 +20,8 @@ export class ChatService {
 
   async getUserChats(user: User) {
     const chats = await this.prisma.chatHistory.findMany({
-      where: {userId: user.id}
+      where: {userId: user.id},
+      orderBy: {updatedAt: 'desc'}
     })
 
     return { chats: chats };
@@ -29,7 +30,11 @@ export class ChatService {
   async getChatHistory(user: User, chatId: number, ignoreFirst: boolean) {
     const history = await this.prisma.chatHistory.findUnique({
       where: {id: chatId},
-      include: {messages: true}
+      include: {
+        messages: {
+          orderBy: {sentAt: 'asc'}
+        }
+      }
     });
 
     if (!history) {
@@ -51,7 +56,7 @@ export class ChatService {
     const newChat = await this.prisma.chatHistory.create({
       data: {
         userId: user.id,
-        title: message  //tmp
+        title: "New Chat"
       }
     });
 
@@ -114,10 +119,46 @@ export class ChatService {
         }
       });
 
+      if (history.history.title === "New Chat") {
+        await this.setChatTitle(chatId, message);
+      }
+
       return { response: accumulatedText }; //tmp, try to stream it
     } catch(error) {
       console.log(error);
       throw new InternalServerErrorException("An error has occured when sending the message");
+    }
+  }
+
+  async setChatTitle(chatId: number, message: string) {
+    try {
+      const chat = this.model.startChat({
+        history: [
+          {
+            role: "user",
+            parts: [{ text: "Hello" }],
+          },
+          {
+            role: "model",
+            parts: [{ text: "Great to meet you. What would you like to know?" }],
+          },
+        ],
+      });
+      
+      const response = await chat.sendMessage([
+        `Give me a title for a conversation that starts with the following prompt,
+        return only the title without any additional text, and make it less than
+        26 characters long if possible: "${message}"`
+      ]);
+      const title = response.response.text();
+
+      await this.prisma.chatHistory.update({
+        where: {id: chatId},
+        data: {title: title}
+      })
+    } catch(error) {
+      console.log(error);
+      //set msg as title?
     }
   }
 }

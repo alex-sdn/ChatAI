@@ -5,6 +5,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import Markdown from "react-markdown";
+import eventEmitter from "../utils/eventEmitter";
 
 interface Message {
   sender: "USER" | "AI",
@@ -45,21 +46,6 @@ const ChatPage = () => {
       // display error
     }
   };
-
-  useEffect(() => {
-    const sentFirstPrompt = sessionStorage.getItem(`sentFirstPrompt-${id}`);
-
-    if (location.state?.firstPrompt && !sentFirstPrompt) {
-      sendMessage(location.state?.firstPrompt);
-      sessionStorage.setItem(`sentFirstPrompt-${id}`, "true");
-    } else {
-      fetchMessages();
-    }
-  }, [id]);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isLoading]);
 
   const sendMessage = async (prompt: string) => {
     setMessages((prev) => [
@@ -105,6 +91,26 @@ const ChatPage = () => {
       setIsLoading(false);
     }
   }
+
+  useEffect(() => {
+    const initChatPage = async () => {
+      const sentFirstPrompt = sessionStorage.getItem(`sentFirstPrompt-${id}`);
+  
+      if (location.state?.firstPrompt && !sentFirstPrompt) {
+        await sendMessage(location.state?.firstPrompt);
+        sessionStorage.setItem(`sentFirstPrompt-${id}`, "true");
+        eventEmitter.emit("sentFirstPrompt");
+      } else {
+        fetchMessages();
+      }
+    }
+
+    initChatPage();
+  }, [id]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isLoading]);
 
   return (
     <div className="flex flex-col w-full h-[calc(800vh-100px)] overflow-hidden">

@@ -3,59 +3,7 @@ import Button from "./Button"
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-
-// const chats = [
-//   {
-//     id: 1,
-//     title: "Getting Started",
-//     createdAt: new Date().toISOString()
-//   },
-//   {
-//     id: 2,
-//     title: "Project Discussion",
-//     createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString() // yesterday
-//   },
-//   {
-//     id: 3,
-//     title: "Code Review",
-//     createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString() // 2 days ago
-//   },
-//   {
-//     id: 4,
-//     title: "Debugging Session For Long Title",
-//     createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString() // 3 days ago
-//   },
-//   {
-//     id: 5,
-//     title: "General Inquiry",
-//     createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString() // 4 days ago
-//   },
-//   {
-//     id: 6,
-//     title: "Feature Request",
-//     createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString() // 5 days ago
-//   },
-//   {
-//     id: 7,
-//     title: "Bug Report",
-//     createdAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString() // 6 days ago
-//   },
-//   {
-//     id: 8,
-//     title: "Team Meeting",
-//     createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days ago
-//   },
-//   {
-//     id: 9,
-//     title: "Client Feedback",
-//     createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString() // 8 days ago
-//   },
-//   {
-//     id: 10,
-//     title: "Deployment Issues",
-//     createdAt: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString() // 9 days ago
-//   }
-// ]
+import eventEmitter from "../utils/eventEmitter";
 
 interface Chat {
   id: number,
@@ -101,6 +49,18 @@ export default function Sidebar({ isOpen, toggleSidebar }: Props) {
   useEffect(() => {
     fetchChats();
   }, [id]);
+
+  useEffect(() => {
+    const handleFirstPrompt = () => {
+      fetchChats();
+    };
+
+    eventEmitter.on("sentFirstPrompt", handleFirstPrompt);
+
+    return () => {
+      eventEmitter.off("sentFirstPrompt", handleFirstPrompt);
+    }
+  }, []);
 
   return (
     <aside className={`fixed top-0 left-0 bg-[#171717] min-h-screen max-h-screen
