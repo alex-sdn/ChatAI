@@ -64,10 +64,10 @@ export default function Sidebar({ isOpen, toggleSidebar }: Props) {
 
   return (
     <aside className={`fixed top-0 left-0 bg-[#171717] min-h-screen max-h-screen
-      w-3xs text-[15px] px-[15px] transition-transform duration-400 z-50
+      w-[256px] text-[15px] px-[15px] transition-transform duration-400 z-50
       ${isOpen ? "translate-x-0 md:relative" : "-translate-x-full"}`}
     >
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full w-[226px]">
         <header className="my-[10px]">
           <div className="flex justify-between text-2xl">
             <div>
