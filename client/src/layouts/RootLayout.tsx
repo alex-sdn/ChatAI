@@ -3,9 +3,11 @@ import Cookies from "js-cookie"
 import Button from "../components/Button"
 import { useState } from "react"
 import Sidebar from "../components/Sidebar"
+import SearchModal from "../components/SearchModal"
 
 const RootLayout = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [isSearchOpen, setSearchOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -15,17 +17,29 @@ const RootLayout = () => {
   }
 
   const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+    setSidebarOpen(!isSidebarOpen);
+  }
+
+  const toggleSearch = () => {
+    setSearchOpen(!isSearchOpen);
   }
 
   return (
     <div className="flex h-screen">
-      <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar}/>
+      <Sidebar
+        isSidebarOpen={isSidebarOpen}
+        toggleSidebar={toggleSidebar}
+        toggleSearch={toggleSearch}
+      />
+
+      {isSearchOpen && (
+        <SearchModal toggleSearch={toggleSearch} />
+      )}
 
       <div className="flex flex-col w-full">
         <header className="flex justify-between py-[12px] px-[22px] border-b-1 border-[#323232]">
           <div className="flex">
-            {!isOpen &&
+            {!isSidebarOpen &&
               <Button onClick={toggleSidebar} tooltip="Open sidebar">sidebar</Button>
             }
             <p className="font-semibold text-[19px] opacity-60 mt-[3px] ml-1">

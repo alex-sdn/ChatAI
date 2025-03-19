@@ -13,11 +13,12 @@ interface Chat {
 } 
 
 interface Props {
-  isOpen: boolean,
+  isSidebarOpen: boolean,
   toggleSidebar: () => void;
+  toggleSearch: () => void;
 }
 
-export default function Sidebar({ isOpen, toggleSidebar }: Props) {
+export default function Sidebar({ isSidebarOpen, toggleSidebar, toggleSearch }: Props) {
   const token = Cookies.get("access_token");
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -72,12 +73,12 @@ export default function Sidebar({ isOpen, toggleSidebar }: Props) {
 
   return (
     <aside className={`fixed top-0 left-0 bg-[#171717] min-h-screen max-h-screen
-      w-[256px] text-[15px] px-[15px] transition-transform duration-400 z-50
-      ${isOpen ? "translate-x-0 md:relative" : "-translate-x-full"}`}
+      w-[256px] text-[15px] px-[15px] transition-transform duration-400 z-48
+      ${isSidebarOpen ? "translate-x-0 md:relative" : "-translate-x-full"}`}
     >
       {errorMessage && (
         <div className={`fixed top-5 left-0 right-0 bg-red-500 text-white text-center
-          p-2 z-50 mx-5 rounded-[30px] text-[14px] transition-transform duration-250 transform 
+          p-2 z-48 mx-5 rounded-[30px] text-[14px] transition-transform duration-250 transform 
           ${showError ? 'translate-y-0' : '-translate-y-20'}`}>
           {errorMessage}
         </div>
@@ -89,7 +90,7 @@ export default function Sidebar({ isOpen, toggleSidebar }: Props) {
               <Button onClick={toggleSidebar} tooltip="Close sidebar">sidebar</Button>
             </div>
             <div className="flex">
-              <Button onClick={() => {}} tooltip="Search chats">search</Button>
+              <Button onClick={toggleSearch} tooltip="Search chats">search</Button>
               <Button onClick={() => {navigate("/")}} tooltip="New chat">newChat</Button>
             </div>
           </div>
