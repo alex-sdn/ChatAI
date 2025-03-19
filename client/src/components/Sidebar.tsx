@@ -73,7 +73,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, toggleSearch }: 
 
   return (
     <aside className={`fixed top-0 left-0 bg-[#171717] min-h-screen max-h-screen
-      w-[256px] text-[15px] px-[15px] transition-transform duration-400 z-48
+      w-[256px] text-[15px] transition-transform duration-400 z-48
       ${isSidebarOpen ? "translate-x-0 md:relative" : "-translate-x-full"}`}
     >
       {errorMessage && (
@@ -83,8 +83,8 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, toggleSearch }: 
           {errorMessage}
         </div>
       )}
-      <div className="flex flex-col h-full w-[226px]">
-        <header className="my-[10px]">
+      <div className="flex flex-col h-full w-[256px]">
+        <header className="my-[10px] px-[15px]">
           <div className="flex justify-between text-2xl">
             <div>
               <Button onClick={toggleSidebar} tooltip="Close sidebar">sidebar</Button>
@@ -96,12 +96,14 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, toggleSearch }: 
           </div>
         </header>
 
-        <h1 className="py-[10px] text-center font-semibold">
-          My Chats
-        </h1>
-        <hr className="border-[#3a3a3a]"/>
+        <div className="px-[15px]">
+          <h1 className="py-[10px] text-center font-semibold">
+            My Chats
+          </h1>
+          <hr className="border-[#3a3a3a]"/>
+        </div>
 
-        <div className="mt-[14px] flex-grow overflow-y-scroll overflow-x-hidden">
+        <div className="mt-[14px] px-[15px] flex-grow overflow-y-scroll overflow-x-hidden max-h-[calc(100vh-172px)]">
           <ul>
             {chats.length > 0
               ? chats.map(chat => (
@@ -109,8 +111,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, toggleSearch }: 
                   <li
                     className={`px-[8px] py-[8px] overflow-hidden whitespace-nowrap text-ellipsis
                       hover:cursor-pointer hover:bg-[#202020] rounded-[8px] active:opacity-80
-                      ${Number(id) === chat.id ? "bg-[#2f2f2f]" : ""}  
-                    `}
+                      ${Number(id) === chat.id ? "bg-[#2f2f2f]" : ""}`}
                   >
                     {chat.title}
                   </li>
@@ -121,7 +122,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, toggleSearch }: 
           </ul>
         </div>
 
-        <footer className="py-[10px]">
+        <footer className="py-[10px] px-[15px]">
           <p className="text-[14px]">Upgrade plan</p>
           <p className="text-[13px] opacity-60">More access to the best models</p>
         </footer>
