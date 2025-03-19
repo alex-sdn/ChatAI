@@ -1,9 +1,9 @@
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "./Button"
-import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import eventEmitter from "../utils/eventEmitter";
+import ChatGroup from "./ChatGroup";
 
 interface Chat {
   id: number,
@@ -26,6 +26,9 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, toggleSearch }: 
   const { id } = useParams();
 
   const [chats, setChats] = useState<Chat[]>([]);
+  const [todayChats, setTodayChats] = useState<Chat[]>([]);
+  const [yesterdayChats, setYesterdayChats] = useState<Chat[]>([]);
+  const [earlierChats, setEarlierChats] = useState<Chat[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [showError, setShowError] = useState(false);
 
@@ -55,9 +58,41 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, toggleSearch }: 
     }
   }
 
+  const sortChats = () => {
+    const today: Chat[] = [];
+    const yesterday: Chat[] = [];
+    const earlier: Chat[] = [];
+
+
+    const now = new Date();
+    const todayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterdayDate = new Date(todayDate);
+    yesterdayDate.setDate(todayDate.getDate() - 1);
+
+    chats.forEach(chat => {
+      const chatDate = new Date(chat.updatedAt);
+
+      if (chatDate >= todayDate) {
+        today.push(chat);
+      } else if (chatDate >= yesterdayDate) {
+        yesterday.push(chat);
+      } else {
+        earlier.push(chat);
+      }
+    })
+
+    setTodayChats(today);
+    setYesterdayChats(yesterday);
+    setEarlierChats(earlier);
+  }
+
   useEffect(() => {
     fetchChats();
   }, [id]);
+
+  useEffect(() => {
+    sortChats();
+  }, [chats]);
 
   useEffect(() => {
     const handleFirstPrompt = () => {
@@ -106,18 +141,12 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, toggleSearch }: 
         <div className="mt-[14px] px-[15px] flex-grow overflow-y-scroll overflow-x-hidden max-h-[calc(100vh-172px)]">
           <ul>
             {chats.length > 0
-              ? chats.map(chat => (
-                <Link to={`/chat/${chat.id}`} key={chat.id}>
-                  <li
-                    className={`px-[8px] py-[8px] overflow-hidden whitespace-nowrap text-ellipsis
-                      hover:cursor-pointer hover:bg-[#202020] rounded-[8px] active:opacity-80
-                      ${Number(id) === chat.id ? "bg-[#2f2f2f]" : ""}`}
-                  >
-                    {chat.title}
-                  </li>
-                </Link>
-              ))
-            : <p className="text-center opacity-90 italic">No chats found</p>
+              ? <>
+                  <ChatGroup chats={todayChats} group="Today"/>
+                  <ChatGroup chats={yesterdayChats} group="Yesterday"/>
+                  <ChatGroup chats={earlierChats} group="Earlier"/>
+                </>
+              : <p className="text-center opacity-90 italic">No chats found</p>
             }
           </ul>
         </div>
