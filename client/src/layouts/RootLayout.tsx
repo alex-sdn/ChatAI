@@ -36,7 +36,7 @@ const RootLayout = () => {
         <SearchModal toggleSearch={toggleSearch} />
       )}
 
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full min-w-0">
         <header className="flex justify-between py-[12px] px-[22px] border-b-1 border-[#323232]">
           <div className="flex">
             {!isSidebarOpen &&
