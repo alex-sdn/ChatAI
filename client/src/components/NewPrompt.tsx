@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Props {
   onSubmit: (prompt: string) => Promise<void>,
@@ -7,21 +7,37 @@ interface Props {
 export default function NewPrompt({ onSubmit }: Props) {
   const [prompt, setPrompt] = useState("");
 
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (prompt.trim() !== "") {
+      onSubmit(prompt);
+      setPrompt("");
+    }
+    if (inputRef.current) {
+      inputRef.current.style.height = 'auto';
+    }
+  }
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
   return (
     <div className="max-w-full w-[740px]">
       <form
         className="mx-[16px] pb-[16px] pt-[8px] px-[16px] bg-[#333333] rounded-[14px]"
         onSubmit={(e) => {
-          e.preventDefault();
-          if (prompt.trim() !== "") {
-            onSubmit(prompt);
-            setPrompt("");
-          }
+          handleSubmit(e);
         }}
       >
         <textarea
           name="prompt"
           value={prompt}
+          ref={inputRef}
           placeholder="Ask anything..."
           className="w-full resize-none overflow-hidden focus:outline-none"
           rows={1}
@@ -32,11 +48,7 @@ export default function NewPrompt({ onSubmit }: Props) {
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              if (prompt.trim() !== "") {
-                onSubmit(prompt);
-                setPrompt("");
-              }
+              handleSubmit(e);
             }
           }}
         />
@@ -45,11 +57,7 @@ export default function NewPrompt({ onSubmit }: Props) {
             className="w-8 h-8 flex items-center justify-center bg-[#e0e0e0] rounded-2xl
               hover:cursor-pointer hover:bg-[#adadad]"
             onClick={(e) => {
-              e.preventDefault();
-              if (prompt.trim() !== "") {
-                onSubmit(prompt);
-                setPrompt("");
-              }
+              handleSubmit(e);
             }}
           >
             <img
