@@ -35,7 +35,7 @@ model ChatHistory {
   title         String
   messages      Message[]
 
-  updatedAt     DateTime @updatedAt
+  updatedAt     DateTime @updatedAt @default(now())
 }
 
 model Message {

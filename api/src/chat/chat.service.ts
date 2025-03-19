@@ -104,20 +104,7 @@ export class ChatService {
       const response = await chat.sendMessage([message]);
       const accumulatedText = response.response.text();
 
-      await this.prisma.message.create({
-        data: {
-          chatId: chatId,
-          sender: MessageSender.USER,
-          text: message
-        }
-      });
-      await this.prisma.message.create({
-        data: {
-          chatId: chatId,
-          sender: MessageSender.AI,
-          text: accumulatedText
-        }
-      });
+      await this.updateChatHistory(chatId, message, accumulatedText);
 
       if (history.history.title === "New Chat") {
         await this.setChatTitle(chatId, message);
@@ -128,6 +115,33 @@ export class ChatService {
       console.log(error);
       throw new InternalServerErrorException("An error has occured when sending the message");
     }
+  }
+
+  async updateChatHistory(chatId: number, message: string, answer: string) {
+    const userMessage = {
+      sender: MessageSender.USER,
+      text: message
+    };
+    const aiMessage = {
+      sender: MessageSender.AI,
+      text: answer
+    };
+
+    await this.prisma.chatHistory.update({
+      where: {id: chatId},
+      data: {
+        messages: {
+          create: [userMessage, aiMessage]
+        }
+      }
+    });
+
+    await this.prisma.chatHistory.update({
+      where: {id: chatId},
+      data: {
+        updatedAt: new Date()  //broken otherwise
+      }
+    })
   }
 
   async setChatTitle(chatId: number, message: string) {
