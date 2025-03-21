@@ -66,7 +66,7 @@ const ChatPage = () => {
       }
     ]);
 
-    setIsLoading(true);
+    // setIsLoading(true);
     
     try {
       const response = await fetch(`${apiUrl}/chat/${id}`, {
@@ -81,17 +81,43 @@ const ChatPage = () => {
       })
 
       if (response.status === 201) {
-        const data = await response.json();
-        const answer = data.response;
+        // const data = await response.json();
+        // const answer = data.response;
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
 
+        // add empty msg that will get replaced for each chunk
         setMessages((prev) => [
           ...prev,
           {
             sender: "AI",
-            text: answer,
-            // sentAt: new Date().toISOString()
+            text: "",
           }
         ]);
+
+        while (reader) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const answer = decoder.decode(value, { stream: true });
+
+          setMessages((prev) => [
+            ...prev.slice(0, -1),
+            {
+              sender: "AI",
+              text: answer,
+            }
+          ]);
+        }
+
+        // setMessages((prev) => [
+        //   ...prev,
+        //   {
+        //     sender: "AI",
+        //     text: answer,
+        //     // sentAt: new Date().toISOString()
+        //   }
+        // ]);
       } else {
         throw new Error(`Failed to send message [${response.status}]`);
       }
@@ -127,7 +153,7 @@ const ChatPage = () => {
 
   return (
     <div className="flex flex-col w-full h-[calc(800vh-100px)] overflow-hidden">
-      <div className="flex overflow-y-auto justify-center pb-10">
+      <div className="flex overflow-y-scroll justify-center pb-10">
         <div className="flex flex-col w-full max-w-[740px] px-[10px] mt-5">
           {errorMessage && (
             <div className={`top-5 left-200 right-200 bg-red-500 text-white text-center

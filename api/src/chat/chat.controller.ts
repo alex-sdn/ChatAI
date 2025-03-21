@@ -6,11 +6,12 @@ import {
     ParseIntPipe,
     Post,
     Req,
+    Res,
     UseGuards 
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { User } from '@prisma/client';
 
 interface AuthRequest extends Request {
@@ -43,8 +44,10 @@ export class ChatController {
     sendMessage(
         @Req() req: AuthRequest,
         @Param('id', ParseIntPipe) chatId: number,
-        @Body('message') message: string) {
-        return this.chatService.sendMessage(req.user, chatId, message);
+        @Body('message') message: string,
+        @Res() res: Response
+    ) {
+        this.chatService.sendMessage(req.user, chatId, message, res);
     }
 
     // add history?

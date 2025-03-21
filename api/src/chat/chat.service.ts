@@ -2,7 +2,9 @@ import { GenerativeModel, GoogleGenerativeAI } from '@google/generative-ai';
 import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MessageSender, User } from '@prisma/client';
+import { Response } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Readable } from 'stream';
 
 @Injectable()
 export class ChatService {
@@ -78,12 +80,12 @@ export class ChatService {
     return newChat;
   }
 
-  async sendMessage(user: User, chatId: number, message: string) {
+  async sendMessage(user: User, chatId: number, message: string, res: Response) {
     const history = await this.getChatHistory(user, chatId, false);
 
     const formattedHistory = history.history.messages.map((msg) => ({
       role: msg.sender === "USER" ? "user" : "model",
-      parts: [{ text: msg. text }],
+      parts: [{ text: msg.text }],
     }));
 
     try {
@@ -93,16 +95,26 @@ export class ChatService {
         //   maxOutputTokens: 500
         // }
       });
-  
-      // const response = await chat.sendMessageStream([message]);
-  
-      // let accumulatedText = "";
-      // for await (const chunk of response.stream) {
-      //   accumulatedText += chunk.text();
-      // }
 
-      const response = await chat.sendMessage([message]);
-      const accumulatedText = response.response.text();
+      res.setHeader('Content-type', 'text/plain');
+      res.setHeader('Transfer-Encoding', 'chunked');
+
+      const stream = new Readable({
+        read() {},
+      });
+
+      const response = await chat.sendMessageStream([message]);
+  
+      let accumulatedText = "";
+      for await (const chunk of response.stream) {
+        accumulatedText += chunk.text();
+
+        res.write(accumulatedText);
+      }
+      res.end();
+
+      // const response = await chat.sendMessage([message]);
+      // const accumulatedText = response.response.text();
 
       await this.updateChatHistory(chatId, message, accumulatedText);
 
@@ -110,7 +122,7 @@ export class ChatService {
         await this.setChatTitle(chatId, message);
       }
 
-      return { response: accumulatedText }; //tmp, try to stream it
+      // return { response: accumulatedText }; //tmp, try to stream it
     } catch(error) {
       console.log(error);
       throw new InternalServerErrorException("An error has occured when sending the message");
