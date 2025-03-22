@@ -17,7 +17,7 @@ export class ChatService {
   ) {
     const geminiPublicKey = this.config.get("GEMINI_PUBLIC_KEY");
     this.genAI = new GoogleGenerativeAI(geminiPublicKey);
-    this.model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    this.model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); //just use 2.0?
   }
 
   async getUserChats(user: User) {
@@ -81,14 +81,14 @@ export class ChatService {
   }
 
   async sendMessage(user: User, chatId: number, message: string, res: Response) {
-    const history = await this.getChatHistory(user, chatId, false);
-
-    const formattedHistory = history.history.messages.map((msg) => ({
-      role: msg.sender === "USER" ? "user" : "model",
-      parts: [{ text: msg.text }],
-    }));
-
     try {
+      const history = await this.getChatHistory(user, chatId, false);
+
+      const formattedHistory = history.history.messages.map((msg) => ({
+        role: msg.sender === "USER" ? "user" : "model",
+        parts: [{ text: msg.text }],
+      }));
+
       const chat = this.model.startChat({
         history: formattedHistory,
         // generationConfig: {
@@ -99,33 +99,24 @@ export class ChatService {
       res.setHeader('Content-type', 'text/plain');
       res.setHeader('Transfer-Encoding', 'chunked');
 
-      const stream = new Readable({
-        read() {},
-      });
-
       const response = await chat.sendMessageStream([message]);
   
       let accumulatedText = "";
       for await (const chunk of response.stream) {
         accumulatedText += chunk.text();
-
         res.write(accumulatedText);
       }
-      res.end();
-
-      // const response = await chat.sendMessage([message]);
-      // const accumulatedText = response.response.text();
 
       await this.updateChatHistory(chatId, message, accumulatedText);
-
+      
       if (history.history.title === "New Chat") {
         await this.setChatTitle(chatId, message);
       }
 
-      // return { response: accumulatedText }; //tmp, try to stream it
+      res.end();
     } catch(error) {
       console.log(error);
-      throw new InternalServerErrorException("An error has occured when sending the message");
+      res.status(500).json({ error: "An error occured while sending the message" });
     }
   }
 

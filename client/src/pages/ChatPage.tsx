@@ -10,7 +10,6 @@ import eventEmitter from "../utils/eventEmitter";
 interface Message {
   sender: "USER" | "AI",
   text: string,
-  // sentAt: string
 }
 
 const ChatPage = () => {
@@ -23,6 +22,7 @@ const ChatPage = () => {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorAnswer, setErrorAnswer] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [showError, setShowError] = useState(false);
 
@@ -57,16 +57,14 @@ const ChatPage = () => {
   };
 
   const sendMessage = async (prompt: string) => {
+    setErrorAnswer("");
     setMessages((prev) => [
       ...prev,
-      {
-        sender: "USER",
-        text: prompt,
-        // sentAt: new Date().toISOString()
-      }
+      { sender: "USER", text: prompt },
+      { sender: "AI", text: "" }
     ]);
 
-    // setIsLoading(true);
+    setIsLoading(true);
     
     try {
       const response = await fetch(`${apiUrl}/chat/${id}`, {
@@ -80,20 +78,9 @@ const ChatPage = () => {
         })
       })
 
-      if (response.status === 201) {
-        // const data = await response.json();
-        // const answer = data.response;
+      if (response.ok) {
         const reader = response.body?.getReader();
         const decoder = new TextDecoder();
-
-        // add empty msg that will get replaced for each chunk
-        setMessages((prev) => [
-          ...prev,
-          {
-            sender: "AI",
-            text: "",
-          }
-        ]);
 
         while (reader) {
           const { done, value } = await reader.read();
@@ -103,29 +90,15 @@ const ChatPage = () => {
 
           setMessages((prev) => [
             ...prev.slice(0, -1),
-            {
-              sender: "AI",
-              text: answer,
-            }
+            { sender: "AI", text: answer }
           ]);
         }
-
-        // setMessages((prev) => [
-        //   ...prev,
-        //   {
-        //     sender: "AI",
-        //     text: answer,
-        //     // sentAt: new Date().toISOString()
-        //   }
-        // ]);
       } else {
         throw new Error(`Failed to send message [${response.status}]`);
       }
     } catch(error: any) {
       console.log(error);
-      setErrorMessage(error.message || "Failed to send message");
-      setShowError(true);
-      setTimeout(() => setShowError(false), 4000);
+      setErrorAnswer(error.message || "Failed to send message");
     } finally {
       setIsLoading(false);
     }
@@ -199,12 +172,17 @@ const ChatPage = () => {
               }
             </div>
           ))}
+          {errorAnswer && (
+            <p className="flex justify-center mb-10 text-red-500">
+              {errorAnswer}
+            </p>
+          )}
           {isLoading && (
-            <div className="flex justify-center my-4">
+            <div className="flex justify-center mb-4">
               <img
                 src="/loader.svg"
                 alt="loader"
-                className="filter invert opacity-50 w-9 animate-spin"
+                className="filter invert opacity-50 w-7 animate-spin"
               />
             </div>
           )}
