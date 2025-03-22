@@ -190,7 +190,7 @@ const ChatPage = () => {
         </div>
       </div>
       <div className="flex justify-center mt-auto mb-5">
-        <NewPrompt onSubmit={sendMessage} />
+        <NewPrompt onSubmit={sendMessage} isLoading={isLoading} />
       </div>
     </div>
   )

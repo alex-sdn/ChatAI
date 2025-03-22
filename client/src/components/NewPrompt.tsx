@@ -2,16 +2,17 @@ import { useEffect, useRef, useState } from "react";
 
 interface Props {
   onSubmit: (prompt: string) => Promise<void>,
+  isLoading: boolean
 }
 
-export default function NewPrompt({ onSubmit }: Props) {
+export default function NewPrompt({ onSubmit, isLoading }: Props) {
   const [prompt, setPrompt] = useState("");
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
-    if (prompt.trim() !== "") {
+    if (!isLoading && prompt.trim() !== "") {
       onSubmit(prompt);
       setPrompt("");
     }

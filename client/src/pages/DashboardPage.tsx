@@ -50,7 +50,7 @@ const DashboardPage = () => {
       <h1 className="font-semibold text-3xl text-white text-center mb-5">
         What can I help with?
       </h1>
-      <NewPrompt onSubmit={startChat} />
+      <NewPrompt onSubmit={startChat} isLoading={false} />
     </div>
   )
 }
