@@ -13,7 +13,7 @@ import { APP_GUARD } from '@nestjs/core';
     ConfigModule.forRoot({ isGlobal: true }),
     RateLimiterModule.register({
       points: 60,
-      duration: 60
+      duration: 20
     }),
     AuthModule,
     ChatModule,
