@@ -118,7 +118,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, toggleSearch }: 
           {errorMessage}
         </div>
       )}
-      <div className="flex flex-col h-full w-[256px]">
+      <div className="flex flex-col h-full w-[256px] min-h-screen">
         <header className="my-[10px] px-[15px]">
           <div className="flex justify-between text-2xl">
             <div>
@@ -151,9 +151,28 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, toggleSearch }: 
           </ul>
         </div>
 
-        <footer className="py-[10px] px-[15px]">
-          <p className="text-[14px]">Upgrade plan</p>
-          <p className="text-[13px] opacity-60">More access to the best models</p>
+        <footer className="py-[8px] px-[15px]">
+          <div 
+            className="flex flex-row items-center rounded-[10px] py-1 px-1.5
+              hover:cursor-pointer hover:bg-[#1e1e1e]"
+            onClick={() => {
+              window.open("https://github.com/alex-sdn/ChatAI");
+            }}
+          >
+            <div className="w-9 h-9 flex items-center justify-center rounded-3xl
+              mr-[10px] border-[1px] border-[#555555]/[0.6]"
+            >
+              <img
+                src="/github.svg"
+                alt="github icon"
+                className="filter invert opacity-40 w-[20px]"
+              />
+            </div>
+            <div>
+              <p className="text-[14px]">On Github</p>
+              <p className="text-[13px] opacity-60">See the code for this project</p>
+            </div>
+          </div>
         </footer>
       </div>
     </aside>
