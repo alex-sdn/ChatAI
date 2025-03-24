@@ -33,13 +33,11 @@ export class ChatController {
         return this.chatService.getChatHistory(req.user, chatId, true);
     }
 
-    // create chat
     @Post()
     startChat(@Req() req: AuthRequest, @Body('message') message: string) {
         return this.chatService.startChat(req.user, message);
     }
 
-    // stream-answer
     @Post(':id')
     sendMessage(
         @Req() req: AuthRequest,
@@ -49,6 +47,4 @@ export class ChatController {
     ) {
         this.chatService.sendMessage(req.user, chatId, message, res);
     }
-
-    // add history?
 }
