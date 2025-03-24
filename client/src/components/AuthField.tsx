@@ -1,5 +1,11 @@
 
-export default function AuthField({ form, name, label }) {
+interface Props {
+  form: any;
+  name: string;
+  label: string;
+}
+
+export default function AuthField({ form, name, label }: Props) {
   return (
     <div className="mt-[14px] w-[210px]">
       <p className="font-[500] ml-1 mb-1">
