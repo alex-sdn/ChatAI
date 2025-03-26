@@ -131,28 +131,25 @@ export class ChatService {
   }
 
   async updateChatHistory(chatId: number, message: string, answer: string) {
-    const userMessage = {
-      sender: MessageSender.USER,
-      text: message
-    };
-    const aiMessage = {
-      sender: MessageSender.AI,
-      text: answer
-    };
-
-    await this.prisma.chatHistory.update({
-      where: {id: chatId},
+    await this.prisma.message.create({
       data: {
-        messages: {
-          create: [userMessage, aiMessage]
-        }
+        chatId: chatId,
+        sender: MessageSender.USER,
+        text: message
       }
-    });
+    })
+    await this.prisma.message.create({
+      data: {
+        chatId: chatId,
+        sender: MessageSender.AI,
+        text: answer
+      }
+    })
 
     await this.prisma.chatHistory.update({
       where: {id: chatId},
       data: {
-        updatedAt: new Date()  //won't auto update
+        updatedAt: new Date()
       }
     })
   }
