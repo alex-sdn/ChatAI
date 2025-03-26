@@ -4,7 +4,6 @@ import { ConfigService } from '@nestjs/config';
 import { MessageSender, User } from '@prisma/client';
 import { Response } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Readable } from 'stream';
 
 @Injectable()
 export class ChatService {
