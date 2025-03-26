@@ -97,7 +97,7 @@ const SearchModal = ({ toggleSearch }: Props) => {
         <hr className="border-[#424242]"/>
 
         <div className="flex max-h-[400px]"> 
-          <div className="flex flex-col overflow-y-auto my-[6px]">
+          <div className="flex flex-col overflow-y-auto my-[6px] w-full">
             <ul>
               {filteredChats.length > 0
                 ? filteredChats.map((chat) => (
