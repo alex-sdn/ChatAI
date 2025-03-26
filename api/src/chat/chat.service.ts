@@ -30,54 +30,64 @@ export class ChatService {
   }
 
   async getChatHistory(user: User, chatId: number, ignoreFirst: boolean) {
-    const history = await this.prisma.chatHistory.findUnique({
-      where: {id: chatId},
-      include: {
-        messages: {
-          orderBy: {sentAt: 'asc'}
+    try {
+      const history = await this.prisma.chatHistory.findUnique({
+        where: {id: chatId},
+        include: {
+          messages: {
+            orderBy: {sentAt: 'asc'}
+          }
         }
+      });
+
+      if (!history) {
+        throw new BadRequestException(`No chat found for id:${chatId}`);
       }
-    });
 
-    if (!history) {
-      throw new BadRequestException(`No chat found for id:${chatId}`);
+      if (history.userId !== user.id) {
+        throw new ForbiddenException('You do not have permission to access this');
+      }
+
+      if (ignoreFirst) {
+        history.messages.splice(0, 2);
+      }
+
+      return { history: history };
+    } catch(error) {
+      console.log(error);
+      throw new InternalServerErrorException("Failed to fetch chat history");
     }
-
-    if (history.userId !== user.id) {
-      throw new ForbiddenException('You do not have permission to access this');
-    }
-
-    if (ignoreFirst) {
-      history.messages.splice(0, 2);
-    }
-
-    return { history: history };
   }
 
   async startChat(user: User, message: string) {
-    const newChat = await this.prisma.chatHistory.create({
-      data: {
-        userId: user.id,
-        title: "New Chat"
-      }
-    });
+    try {
+      const newChat = await this.prisma.chatHistory.create({
+        data: {
+          userId: user.id,
+          title: "New Chat"
+        }
+      });
 
-    await this.prisma.message.create({
-      data: {
-        chatId: newChat.id,
-        sender: MessageSender.USER,
-        text: "Hello"
-      }
-    });
-    await this.prisma.message.create({
-      data: {
-        chatId: newChat.id,
-        sender: MessageSender.AI,
-        text: "What can I help with?"
-      }
-    });
+      await this.prisma.message.create({
+        data: {
+          chatId: newChat.id,
+          sender: MessageSender.USER,
+          text: "Hello"
+        }
+      });
+      await this.prisma.message.create({
+        data: {
+          chatId: newChat.id,
+          sender: MessageSender.AI,
+          text: "What can I help with?"
+        }
+      });
 
-    return newChat;
+      return newChat;
+    } catch(error) {
+      console.log(error);
+      throw new InternalServerErrorException("Failed to create new chat")
+    }
   }
 
   async sendMessage(user: User, chatId: number, message: string, res: Response) {
