@@ -17,7 +17,7 @@ export class ChatService {
   ) {
     const geminiPublicKey = this.config.get("GEMINI_PUBLIC_KEY");
     this.genAI = new GoogleGenerativeAI(geminiPublicKey);
-    this.model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); //just use 2.0?
+    this.model = this.genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
   }
 
   async getUserChats(user: User) {
@@ -142,7 +142,7 @@ export class ChatService {
     await this.prisma.chatHistory.update({
       where: {id: chatId},
       data: {
-        updatedAt: new Date()  //broken otherwise
+        updatedAt: new Date()  //won't auto update
       }
     })
   }
