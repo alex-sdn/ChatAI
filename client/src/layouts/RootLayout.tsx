@@ -46,7 +46,7 @@ const RootLayout = () => {
               ChatAI
             </p>
           </div>
-          <Button onClick={handleLogout} tooltip="Logout">user</Button>
+          <Button onClick={handleLogout} tooltip="Logout">user_x</Button>
         </header>
 
         <Outlet />
