@@ -22,7 +22,7 @@ export default function NewPrompt({ onSubmit, isLoading }: Props) {
   }
 
   useEffect(() => {
-    if (inputRef.current) {
+    if (inputRef.current && window.innerWidth > 768) {
       inputRef.current.focus();
     }
   }, []);
