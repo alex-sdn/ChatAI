@@ -95,6 +95,15 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, toggleSearch }: 
   }, [chats]);
 
   useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        toggleSidebar();
+      }
+    };
+    handleResize();
+  }, []);
+
+  useEffect(() => {
     const handleFirstPrompt = () => {
       fetchChats();
     };
@@ -142,9 +151,9 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, toggleSearch }: 
           <ul>
             {chats.length > 0
               ? <>
-                  <ChatGroup chats={todayChats} group="Today"/>
-                  <ChatGroup chats={yesterdayChats} group="Yesterday"/>
-                  <ChatGroup chats={earlierChats} group="Earlier"/>
+                  <ChatGroup chats={todayChats} group="Today" toggleSidebar={toggleSidebar}/>
+                  <ChatGroup chats={yesterdayChats} group="Yesterday" toggleSidebar={toggleSidebar}/>
+                  <ChatGroup chats={earlierChats} group="Earlier" toggleSidebar={toggleSidebar}/>
                 </>
               : <p className="text-center opacity-90 italic">No chats found</p>
             }

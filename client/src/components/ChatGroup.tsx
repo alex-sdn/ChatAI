@@ -10,10 +10,17 @@ interface Chat {
 interface Props {
   chats: Chat[];
   group: string;
+  toggleSidebar: () => void;
 }
 
-export default function ChatGroup({ chats, group }: Props) {
+export default function ChatGroup({ chats, group, toggleSidebar }: Props) {
   const { id } = useParams();
+
+  const handleChatOpen = () => {
+    if (window.innerWidth < 768) {
+      toggleSidebar();
+    }
+  }
 
   return (
     <div>
@@ -23,7 +30,7 @@ export default function ChatGroup({ chats, group }: Props) {
             {group}
           </p>
           {chats.map(chat => (
-            <Link to={`/chat/${chat.id}`} key={chat.id}>
+            <Link to={`/chat/${chat.id}`} key={chat.id} onClick={handleChatOpen}>
               <li
                 className={`px-[8px] py-[8px] overflow-hidden whitespace-nowrap text-ellipsis
                   hover:cursor-pointer hover:bg-[#202020] rounded-[8px] active:opacity-80
