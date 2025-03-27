@@ -141,7 +141,7 @@ const ChatPage = () => {
               className={`py-[12px] rounded-[20px] px-[20px]
                 ${message.sender === "USER" 
                   ? "bg-[#303030] max-w-[80%] mr-2.5 self-end inline-block" 
-                  : "pr-[60px] my-[18px] max-w-full"}
+                  : "md:pr-[60px] my-[18px] max-w-full"}
               `}
             >
               {message.sender === "USER"
