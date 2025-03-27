@@ -154,7 +154,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, toggleSearch }: 
           <hr className="border-[#3a3a3a]"/>
         </div>
 
-        <div className="mt-[14px] px-[15px] flex-grow overflow-y-scroll overflow-x-hidden max-h-[calc(100vh-172px)]">
+        <div className="mt-[14px] px-[15px] flex-grow overflow-y-scroll overflow-x-hidden max-h-[calc(100dvh-172px)]">
           <ul>
             {chats.length > 0
               ? <>
@@ -169,7 +169,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, toggleSearch }: 
 
         <footer className="py-[8px] px-[15px]">
           <div 
-            className="flex flex-row items-center rounded-[10px] py-1 px-1.5
+            className="flex flex-row items-center rounded-[10px] py-1 px-1
               hover:cursor-pointer hover:bg-[#1e1e1e]"
             onClick={() => {
               window.open("https://github.com/alex-sdn/ChatAI");
