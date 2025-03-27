@@ -86,6 +86,13 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, toggleSearch }: 
     setEarlierChats(earlier);
   }
 
+  const toggleNewChat = () => {
+    if (window.innerWidth < 768) {
+      toggleSidebar();
+    }
+    navigate("/");
+  }
+
   useEffect(() => {
     fetchChats();
   }, [id]);
@@ -135,7 +142,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, toggleSearch }: 
             </div>
             <div className="flex">
               <Button onClick={toggleSearch} tooltip="Search chats">search</Button>
-              <Button onClick={() => {navigate("/")}} tooltip="New chat">newChat</Button>
+              <Button onClick={toggleNewChat} tooltip="New chat">newChat</Button>
             </div>
           </div>
         </header>
