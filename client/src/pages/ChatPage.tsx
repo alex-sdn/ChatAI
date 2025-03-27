@@ -28,6 +28,7 @@ const ChatPage = () => {
 
   const fetchMessages = async () => {
     try {
+      setIsLoading(true);
       const response = await fetch(`${apiUrl}/chat/${id}`, {
         method: "GET",
         headers: {
@@ -53,6 +54,8 @@ const ChatPage = () => {
       setErrorMessage("Failed to fetch chat history");
       setShowError(true);
       setTimeout(() => setShowError(false), 4000);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -81,12 +84,14 @@ const ChatPage = () => {
       if (response.ok) {
         const reader = response.body?.getReader();
         const decoder = new TextDecoder();
+        let answer = "";
 
         while (reader) {
           const { done, value } = await reader.read();
           if (done) break;
 
-          const answer = decoder.decode(value, { stream: true });
+          const chunk = decoder.decode(value, { stream: true });
+          answer += chunk;
 
           setMessages((prev) => [
             ...prev.slice(0, -1),
@@ -122,7 +127,7 @@ const ChatPage = () => {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isLoading]);
+  }, [isLoading]);
 
   return (
     <div className="flex flex-col w-full h-[calc(800vh-100px)] overflow-hidden">

@@ -113,7 +113,8 @@ export class ChatService {
       let accumulatedText = "";
       for await (const chunk of response.stream) {
         accumulatedText += chunk.text();
-        res.write(accumulatedText);
+        await new Promise(resolve => setTimeout(resolve, 300));
+        res.write(chunk.text());
       }
 
       await this.updateChatHistory(chatId, message, accumulatedText);
