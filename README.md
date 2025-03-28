@@ -1,6 +1,6 @@
 # ChatAI
 
-A full-stack AI Chatbot website with a design largely inspired by ChatGPT. It uses Gemini's free API and features full authentication, chat history per account, and proper rate limiting.
+A full-stack AI Chatbot webapp **available at <a href="http://chatai.asadanowicz.xyz">chatai.asadanowicz.xyz</a>**. It uses Gemini's free API and features full authentication, chat history per account, and proper rate limiting.
 
 ## Tech Stack
 
@@ -33,4 +33,7 @@ A full-stack AI Chatbot website with a design largely inspired by ChatGPT. It us
 
 ## Deployement
 
-[to do]
+The website is deployed on AWS:
+- **Frontend** on S3 and served via CloudFront.
+- **Backend** on EC2.
+- **Database** on RDS.
