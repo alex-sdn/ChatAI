@@ -31,7 +31,7 @@ A full-stack AI Chatbot webapp **available at <a href="http://chatai.asadanowicz
 - Stores chat history for user sessions.
 - Rate limiting to prevent abuse with `nestjs-rate-limiter`.
 
-## Deployement
+## Deployment
 
 The website is deployed on AWS:
 - **Frontend** on S3 and served via CloudFront.
